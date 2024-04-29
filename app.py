@@ -100,7 +100,7 @@ with tab1:
     )
 
     tingkat_kesulitan = st.radio(
-        "Apa kepribadian yang dimiliki karakter tersebut? \n\n",
+        "Pilih tingkat kesulitan soal? \n\n",
         ["Mudah", "Menengah","Sulit"],
         key="tingkat_kesulitan",
         horizontal=True,
