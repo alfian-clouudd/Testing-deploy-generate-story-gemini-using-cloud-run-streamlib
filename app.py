@@ -80,86 +80,66 @@ st.header("BANK SOAL", divider="rainbow")
 text_model_pro, multimodal_model_pro = load_models()
 
 tab1, tab2, tab3, tab4 = st.tabs(
-    ["Generate story", "Marketing campaign", "Image Playground", "Video Playground"]
+    ["Generate question", "Marketing campaign", "Image Playground", "Video Playground"]
 )
 
 with tab1:
     st.write("Using Gemini 1.0 Pro - Text only model")
-    st.subheader("Generate a story")
+    st.subheader("Generate a question")
 
-    # Story premise
-    character_name = st.text_input(
-        "Input nama karakter: \n\n", key="character_name", value="Mittens"
+    # question premise
+    jenis_soal = st.radio(
+        "Pilih jenis soal: \n\n",
+        ["Pilihan ganda", "Essay"],
+        key="jenis_soal",
+        horizontal=True,
     )
-    character_type = st.text_input(
-        "Bagaimana tipe karakternya \n\n", key="character_type", value="Cat"
+
+    materi_soal = st.text_input(
+        "Apa Materi Soalnya \n\n", key="materi_soal", value="Sejarah"
     )
-    character_persona = st.text_input(
+
+    tingkat_kesulitan = st.radio(
         "Apa kepribadian yang dimiliki karakter tersebut? \n\n",
-        key="character_persona",
-        value="Mitten is a very friendly cat.",
-    )
-    character_location = st.text_input(
-        "Dimana karakter tersebut hidup? \n\n",
-        key="character_location",
-        value="Andromeda Galaxy",
-    )
-    story_premise = st.multiselect(
-        "Apa premis ceritanya? (can select multiple) \n\n",
-        [
-            "Love",
-            "Adventure",
-            "Mystery",
-            "Horror",
-            "Comedy",
-            "Sci-Fi",
-            "Fantasy",
-            "Thriller",
-        ],
-        key="story_premise",
-        default=["Love", "Adventure"],
-    )
-    creative_control = st.radio(
-        "Pilih tingkat kreativitas: \n\n",
-        ["Low", "High"],
-        key="creative_control",
-        horizontal=True,
-    )
-    length_of_story = st.radio(
-        "Pilih panjang cerita: \n\n",
-        ["Short", "Long"],
-        key="length_of_story",
+        ["Mudah", "Menengah","Sulit"],
+        key="tingkat_kesulitan",
         horizontal=True,
     )
 
-    if creative_control == "Low":
-        temperature = 0.30
-    else:
-        temperature = 0.95
 
+    tampilkan_jawaban_benar = st.radio(
+        "Tampilkan jawaban benar?: \n\n",
+        ["iya", "tidak"],
+        key="tampilkan_jawaban_benar",
+        horizontal=True,
+    )
+    jumlah_soal = st.radio(
+        "Pilih jumlah Soal: \n\n",
+        ["10", "20", "30"],
+        key="jumlah_soal",
+        horizontal=True,
+    )
+
+   
     max_output_tokens = 2048
 
-    prompt = f"""Write a {length_of_story} story based on the following premise: \n
-    character_name: {character_name} \n
-    character_type: {character_type} \n
-    character_persona: {character_persona} \n
-    character_location: {character_location} \n
-    story_premise: {",".join(story_premise)} \n
-    If the story is "short", then make sure to have 5 chapters or else if it is "long" then 10 chapters.
-    Important point is that each chapters should be generated based on the premise given above.
-    First start by giving the book introduction, chapter introductions and then each chapter. It should also have a proper ending.
-    The book should have prologue and epilogue.
+    prompt = f"""Generate a {jumlah_soal} questions suitable for high school students based on the following premise: \n
+    jenis_soal: {jenis_soal} \n
+    materi_soal: {materi_soal} \n
+    tingkat_kesulitan: {tingkat_kesulitan} \n
+    tampilkan_jawaban_benar: {tampilkan_jawaban_benar} \n
+    If the tampilkan_jawaban_benar is "iya" make sure to display an explanation of the correct answer
     """
     config = {
         "temperature": 0.8,
         "max_output_tokens": 2048,
     }
 
-    generate_t2t = st.button("Generate my story", key="generate_t2t")
+    generate_t2t = st.button("Generate my question", key="generate_t2t")
     if generate_t2t and prompt:
         # st.write(prompt)
-        with st.spinner("Generating your story using Gemini 1.0 Pro ..."):
-            first_tab1, first_tab2 = st.tabs(["Story", "Prompt"])
+        with st.spinner("Generating your question using Gemini 1.0 Pro ..."):
+            first_tab1, first_tab2 = st.tabs(["question", "Prompt"])
             with first_tab1:
                 response = get_gemini_pro_text_response(
                     text_model_pro,
@@ -167,7 +147,7 @@ with tab1:
                     generation_config=config,
                 )
                 if response:
-                    st.write("Your story:")
+                    st.write("Your question:")
                     st.write(response)
             with first_tab2:
                 st.text(prompt)
