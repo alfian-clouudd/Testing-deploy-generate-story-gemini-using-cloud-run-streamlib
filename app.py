@@ -100,7 +100,7 @@ with tab1:
         value="Mitten is a very friendly cat.",
     )
     character_location = st.text_input(
-        "Dimana karkter tersebut hidup? \n\n",
+        "Dimana karakter tersebut hidup? \n\n",
         key="character_location",
         value="Andromeda Galaxy",
     )
